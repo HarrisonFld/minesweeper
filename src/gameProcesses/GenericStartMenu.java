@@ -1,4 +1,4 @@
-package gameProcesses.graphicProcesses;
+package gameProcesses;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,8 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
-import gameProcesses.GameHandler;
 
 public class GenericStartMenu extends Generic implements ActionListener  {
 	

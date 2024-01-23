@@ -1,4 +1,4 @@
-package gameProcesses.graphicProcesses;
+package gameProcesses;
 
 import javax.swing.JFrame;
 

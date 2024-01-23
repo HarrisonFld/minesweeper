@@ -1,7 +1,8 @@
-package gameProcesses.graphicProcesses.game;
+package gameProcesses.game;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,19 +13,22 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import gameProcesses.GameHandler;
-import gameProcesses.graphicProcesses.Generic;
+import gameProcesses.Generic;
+import utils.SpatialGrid;
 
 public class GenericGame extends Generic {
 	
 	static JPanel focusAreaContainer;
 	static JPanel playAreaContainer;
 	static GridLayout grid = new GridLayout(GameHandler.getPlotsSqrt(), GameHandler.getPlotsSqrt(), 4, 4);
-
+	
 	public static void startGUI() {
 		
 		frame = new JFrame();
+		//frame.setSize(new Dimension (1000, 1000));
 		frame.setUndecorated(true);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
@@ -33,6 +37,14 @@ public class GenericGame extends Generic {
 		addPlotButtons();
 		
 		frame.setVisible(true);
+		
+	}
+	
+	public static void endGame() {
+		
+		for (Component plot : playAreaContainer.getComponents()) {
+			((PlotButton) plot).setEnabled(false);
+		}
 		
 	}
 	
@@ -63,17 +75,18 @@ public class GenericGame extends Generic {
 	
 	private static void addPlotButtons() {
 		
-		PlotButton[] plots = new PlotButton[GameHandler.getPlotsSqrt() * GameHandler.getPlotsSqrt()];
+		SpatialGrid<PlotButton> plots = new SpatialGrid<PlotButton>(GameHandler.getPlotsSqrt(), GameHandler.getPlotsSqrt());
 		
-		for (int i = 0; i < plots.length; i++) {
+		
+		for (int i = 0; i < plots.getArea(); i++) {
 			
-			plots[i] = new PlotButton(GameHandler.getRandomBoolean(), i);
-			playAreaContainer.add(plots[i]);
+			plots.add(new PlotButton(GameHandler.getRandomBoolean(), i));
+			playAreaContainer.add(plots.get(i));
 			
 		}
 		
-		GameHandler.setPlotsArray(plots);
-		
+		GameHandler.setPlots(plots);
+
 	}
 
 }
