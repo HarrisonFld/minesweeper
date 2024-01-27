@@ -1,21 +1,8 @@
 package gameProcesses;
 
-import javax.swing.JFrame;
-
-public abstract class Generic {
+public interface Generic{
 	
-	protected static JFrame frame;
-	
-	public static void startGUI() {
-		
-		frame = new JFrame();
-		
-	}
-	
-	public static void stopGUI() {
-		
-		frame.dispose();
-		
-	}
+	public void startGUI();
+	public void stopGUI();
 	
 }

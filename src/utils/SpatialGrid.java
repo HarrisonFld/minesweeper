@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SpatialGrid<E> {
 	
@@ -10,14 +11,27 @@ public class SpatialGrid<E> {
 	private int width;
 	private int size = 0;
 	
-	public static final String TOP = "Top";
-    public static final String BOTTOM = "Bottom";
-    public static final String LEFT = "Left";
-    public static final String RIGHT = "Right";
-    public static final String BOTTOM_LEFT = "Bottom Left";
-    public static final String BOTTOM_RIGHT = "Bottom Right";
-    public static final String TOP_LEFT = "Top Left";
-    public static final String TOP_RIGHT = "Top Right";
+	public static enum Directions {
+		
+		TOP,
+		BOTTOM,
+		LEFT,
+		RIGHT,
+		BOTTOM_LEFT,
+		BOTTOM_RIGHT,
+		TOP_LEFT,
+		TOP_RIGHT;
+		
+		public static Directions returnRandomDirection() {
+			
+			Random r = new Random();
+	        int randomNumber = r.nextInt(Directions.values().length);
+			
+			return Directions.values()[randomNumber];
+			
+		}
+		
+	}
 			
 	@SuppressWarnings("unchecked")
 	public SpatialGrid(int height, int width) {
@@ -75,6 +89,19 @@ public class SpatialGrid<E> {
 		
 	}
 	
+	public Object[] toArray() {
+		
+		Object[] array = new Object[getArea()];
+		
+		for (int i = 0; i < array.length; i++) {
+			array[i] = grid.get(i);
+		}
+		
+		return array;
+		
+		
+	}
+	
 	public int getArea() {
 		
 		return height * width;
@@ -87,7 +114,7 @@ public class SpatialGrid<E> {
 		
 	}
 	
-	public E getRelativeTo(String relative, int index) { 
+	public E getRelativeTo(Directions relative, int index) { 
 		
 		try {
 			
@@ -128,66 +155,17 @@ public class SpatialGrid<E> {
 	public Object[] relativeSurroundings(int index) {
 		
 		Object[] elements = new Object[8];
+		Directions[] directions = Directions.values();
 		
-		for (int i = 0; i < 8; i++) {
-			switch (i) {
-			case 0:
-				elements[i] = getRelativeTo(TOP, index);
-				break;
-			case 1:
-				elements[i] = getRelativeTo(BOTTOM, index);
-				break;
-			case 2:
-				elements[i] = getRelativeTo(LEFT, index);
-				break;
-			case 3:
-				elements[i] = getRelativeTo(RIGHT, index);
-				break;
-			case 4:
-				elements[i] = getRelativeTo(BOTTOM_LEFT, index);
-				break;
-			case 5:
-				elements[i] = getRelativeTo(BOTTOM_RIGHT, index);
-				break;
-			case 6:
-				elements[i] = getRelativeTo(TOP_LEFT, index);
-				break;
-			case 7:
-				elements[i] = getRelativeTo(TOP_RIGHT, index);
-				break;
-			}
+		for (int i = 0; i < directions.length; i++) {
+			elements[i] = getRelativeTo(directions[i], index);
 		}
 		
 		return elements;
 		
 	}
 	
-	public String returnRandomDirection() {
-		
-		int random = (int) Math.round((Math.random() * 7));
-		
-		switch (random) {
-		case 0:
-			return TOP;
-		case 1:
-			return BOTTOM;
-		case 2:
-			return LEFT;
-		case 3:
-			return RIGHT;
-		case 4:
-			return BOTTOM_LEFT;
-		case 5:
-			return BOTTOM_RIGHT;
-		case 6:
-			return TOP_LEFT;
-		case 7:
-			return TOP_RIGHT;
-		}
-		
-		return "EXCEDDED DIRECTION";
-		
-	}
+	
 	
 	
 }

@@ -1,7 +1,6 @@
 package gameProcesses;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -17,20 +16,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class GenericStartMenu extends Generic implements ActionListener  {
+import gameProcesses.themes.ThemeHandler;
+
+public class GenericStartMenu implements ActionListener, Generic {
 	
-	static JPanel containerPanel;
-	static JPanel buttonPanel;
-	static JLabel title;
-	static JButton start;
-	static JButton exit;
-	private static GenericStartMenu thisClass = new GenericStartMenu();
-	
-	private GenericStartMenu() {
-	}
+	JFrame frame;
+	JPanel containerPanel;
+	JPanel buttonPanel;
+	JLabel title;
+	JButton start;
+	JButton exit;
 	
 	//Start the GUI and open the start menu
-	public static void startGUI() {
+	
+	public void startGUI() {
 		
 		frame = new JFrame();
 		frame.setSize(new Dimension(500, 300));
@@ -38,7 +37,7 @@ public class GenericStartMenu extends Generic implements ActionListener  {
 		frame.setUndecorated(true);
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		frame.getContentPane().setBackground(Color.GREEN);
+		frame.getContentPane().setBackground(ThemeHandler.getBackground());
 		frame.setLocationRelativeTo(null);
 		
 		//Add Components
@@ -50,28 +49,26 @@ public class GenericStartMenu extends Generic implements ActionListener  {
 		
 	}
 	
-	private static void addPanels() {
+	private void addPanels() {
 		
 		//Title
 		title = new JLabel("MineSweeper", SwingConstants.CENTER);
-		title.setBackground(Color.red);
 		title.setVerticalTextPosition(Font.CENTER_BASELINE);
 		title.setFont(new Font(null, Font.PLAIN, 60));
 		title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		title.setForeground(Color.white);
-		title.setOpaque(true);
-		
+		title.setForeground(ThemeHandler.getText());
+		title.setBackground(ThemeHandler.getForeground());
+		title.setOpaque(true);		
 		//Bottom Buttons Panels
 		containerPanel = new JPanel();
-		containerPanel.setBackground(Color.BLACK);
+		containerPanel.setBackground(ThemeHandler.getBackground());
 		containerPanel.setLayout(new BorderLayout(10, 10));
 		containerPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
 		containerPanel.setOpaque(true);
 
 		buttonPanel = new JPanel();
-		buttonPanel.setBackground(Color.blue);
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-		buttonPanel.setOpaque(true);
+		buttonPanel.setOpaque(false);
 		
 		addButtons();
 		
@@ -84,37 +81,44 @@ public class GenericStartMenu extends Generic implements ActionListener  {
 
 	}
 	
-	private static void addButtons() {
+	private void addButtons() {
 		
 		Dimension buttonSize = new Dimension(200, 100);
 		
 		start = new JButton("Start");
-		start.addActionListener(thisClass);
+		start.addActionListener(this);
 		start.setFocusable(false);
 		start.setPreferredSize(buttonSize);
+		start.setBackground(ThemeHandler.getButton());
 		
 		exit = new JButton("Quit");
-		exit.addActionListener(thisClass);
+		exit.addActionListener(this);
 		exit.setFocusable(false);
 		exit.setPreferredSize(buttonSize);
+		exit.setBackground(ThemeHandler.getButton());
 		
 		//Add To Parent
 		buttonPanel.add(start);
 		buttonPanel.add(exit);
 		
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == start) {
 			
-			stopGUI();
 			GameHandler.startGame();
+			stopGUI();
 			
 		} else {
 			System.exit(1);
 		}
 		
+	}
+
+	@Override
+	public void stopGUI() {
+		frame.dispose();
 	}
 }

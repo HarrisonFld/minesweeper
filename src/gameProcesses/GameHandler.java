@@ -1,64 +1,34 @@
 package gameProcesses;
 
+import java.util.ArrayList;
+
 import gameProcesses.game.GenericGame;
 import gameProcesses.game.PlotButton;
 import utils.SpatialGrid;
 
-public final class GameHandler {
+public class GameHandler {
 	
 	//Defines the individual length of row and column
 	private static int plotsSqrt;
 	private static int seed;
 	private static SpatialGrid<PlotButton> plots;
+	private static ArrayList<Integer> mines = new ArrayList<Integer>();
+	private static int squareCounter = 0;
+	
+	private static GenericGame game;
 	
 	public static void startGame() {
 		
 		GameHandler.setPlotsSqrt(15);
-		GenericGame.startGUI();
-		setStartingSquares();
-		
+		game = new GenericGame();
+		game.startGUI();
+		game.setStartingSquares();
 		
 	}
 	
 	public static void endGame() {
 		
-		GenericGame.endGame();
-		
-	}
-	
-	private static void setStartingSquares() {
-		
-		int height =  (int) (Math.random() * plotsSqrt);
-		int width = (int) (Math.random() * plotsSqrt);
-		PlotButton plot = plots.get(height, width);
-		
-		System.out.println(height + " " + width);
-		
-		while (plot.isMine()) {
-			
-			height =  (int) (Math.random() * plotsSqrt);
-			width = (int) (Math.random() * plotsSqrt);
-			
-			plot = plots.get(height, width);
-			
-		}
-		
-		PlotButton[] nonMinePlots = new PlotButton[8];
-		
-//		for (int i = 0; i < 8; i++) {
-//			
-//			plots.getElementRelativeTo(SpatialGrid.TOP ,plot.getIndex())
-//			
-//			for (int j = 0; j < 3; j++) {
-//				
-//				
-//				
-//			}
-//			
-//		}
-		
-		plot.onLeftLicked();
-		
+		game.endGame();
 		
 	}
 	
@@ -91,6 +61,11 @@ public final class GameHandler {
 		
 	}
 	
+	//When a zero is clicked check if there are any other zeros around
+	public static void checkForZeros(int i) {
+		
+	}
+	
 	public static int getPlotsSqrt() {
 		return plotsSqrt;
 	}
@@ -101,9 +76,9 @@ public final class GameHandler {
 		
 	}
 	
-	public static PlotButton getPlot(int i) {
+	public static SpatialGrid<PlotButton> getPlots() {
 		
-		return plots.get(i);
+		return plots;
 		
 	}
 	
@@ -111,11 +86,28 @@ public final class GameHandler {
 		
 		if (plotsLength > 30) {
 			plotsLength = 30;
+			throw new IllegalArgumentException("plotsLength parameter above 30");
 		} else if (plotsLength < 4) {
 			plotsLength = 4;
+			throw new IllegalArgumentException("plotsLength parameter below 4");
 		}
 		
 		plotsSqrt = plotsLength;
+	}
+	
+	public static void updateCounter() {
+		
+		squareCounter++;
+		
+		if (squareCounter == (plots.getSize() - mines.size())) {
+			System.out.println("Game Won");
+			endGame();
+		}
+		
+	}
+	
+	public static void addToMinesCounter(int i) {
+		mines.add(i);
 	}
 	
 	private GameHandler() {
