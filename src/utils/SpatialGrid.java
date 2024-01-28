@@ -3,13 +3,23 @@ package utils;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Constructs a grid of designated rows and columns. Each grid point can retrieve the grid point
+ * 1 space over in any direction from enum class Directions.
+ * 
+ * <P>The amount of arrays (rows) that the grid can have is specified at creation.
+ * The amount of varriables that each row can have is specified at creation.
+ * The grid has a total capacity of height * width, in other words, area.
+ * 
+ * @param <E>	The Generic Type to be made into a grid
+ */
 public class SpatialGrid<E> {
 	
 	ArrayList<E[]> grid = new ArrayList<E[]>();
 	
-	private int height;
-	private int width;
-	private int size = 0;
+	private int height = 5;
+	private int width = 5;
+	private int fill = 0;
 	
 	public static enum Directions {
 		
@@ -32,7 +42,11 @@ public class SpatialGrid<E> {
 		}
 		
 	}
-			
+	/**
+	 * 
+	 * @param height	The amount of arrays stored
+	 * @param width		The maximnum amount of variables in one row
+	 */
 	@SuppressWarnings("unchecked")
 	public SpatialGrid(int height, int width) {
 		
@@ -51,8 +65,8 @@ public class SpatialGrid<E> {
 	//Auto Adjusts based on capacity
 	public void add(E element) {
 		
-		grid.get((size / width))[size % width] = element;
-		size++;
+		grid.get((fill / width))[fill % width] = element;
+		fill++;
 		
 	}
 	
@@ -108,9 +122,9 @@ public class SpatialGrid<E> {
 		
 	}
 	
-	public int getSize() {
+	public int getFillAmount() {
 		
-		return size;
+		return fill;
 		
 	}
 	

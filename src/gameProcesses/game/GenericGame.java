@@ -19,7 +19,7 @@ import gameProcesses.themes.ThemeHandler;
 import utils.SpatialGrid;
 import utils.SpatialGrid.Directions;
 
-public class GenericGame implements Generic {
+public class GenericGame implements Generic, Runnable {
 	
 	JFrame frame;
 	JPanel focusAreaContainer;
@@ -41,8 +41,6 @@ public class GenericGame implements Generic {
 		addPanels();
 		addPlotButtons();
 		
-		frame.setVisible(true);
-		
 	}
 	
 	
@@ -58,14 +56,19 @@ public class GenericGame implements Generic {
 		playAreaContainer = new JPanel();
 		playAreaContainer.setBackground(Color.black);
 		playAreaContainer.setPreferredSize(new Dimension(700, 700));
+		playAreaContainer.setFocusable(true);
 		playAreaContainer.setLayout(grid);
 		playAreaContainer.setOpaque(true);
 		
 		GridBagConstraints gbc = new GridBagConstraints();
+		
 		gbc.gridwidth = 3;
 		gbc.gridheight = 1;
-		
 		focusAreaContainer.add(playAreaContainer, gbc);
+		
+		gbc.gridx = 3;
+		focusAreaContainer.add(new GameInfoPanel(), gbc);
+
 		
 		//Add To Parent
 		frame.add(focusAreaContainer, BorderLayout.CENTER);
@@ -86,10 +89,11 @@ public class GenericGame implements Generic {
 			if (plot.isMine()) {
 				GameHandler.addToMinesCounter(plot.getIndex());
 			}
-			
 		}
 		
 		GameHandler.setPlots(plots);
+		
+		setStartingSquares();
 
 	}
 	
@@ -150,6 +154,8 @@ public class GenericGame implements Generic {
 				
 			}
 			
+			frame.setVisible(true);
+			
 		}
 		
 		for (PlotButton plotCurrent : nonMinePlots) {
@@ -160,6 +166,7 @@ public class GenericGame implements Generic {
 			
 		}
 		
+		//Change the first plot to be black
 		initialPlot.setBackground(Color.black);
 		
 		
@@ -169,6 +176,13 @@ public class GenericGame implements Generic {
 	@Override
 	public void stopGUI() {
 		frame.dispose();
+	}
+
+
+
+	@Override
+	public void run() {
+		startGUI();
 	}
 	
 }

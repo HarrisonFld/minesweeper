@@ -15,10 +15,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import gameProcesses.themes.ThemeHandler;
 
-public class GenericStartMenu implements ActionListener, Generic {
+public class GenericStartMenu implements ActionListener, Generic, Runnable {
 	
 	JFrame frame;
 	JPanel containerPanel;
@@ -27,8 +30,7 @@ public class GenericStartMenu implements ActionListener, Generic {
 	JButton start;
 	JButton exit;
 	
-	//Start the GUI and open the start menu
-	
+	//Start the GUI (without a thread) and open the start menu
 	public void startGUI() {
 		
 		frame = new JFrame();
@@ -36,7 +38,6 @@ public class GenericStartMenu implements ActionListener, Generic {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		frame.getContentPane().setBackground(ThemeHandler.getBackground());
 		frame.setLocationRelativeTo(null);
 		
@@ -110,6 +111,7 @@ public class GenericStartMenu implements ActionListener, Generic {
 			
 			GameHandler.startGame();
 			stopGUI();
+			Thread.currentThread().interrupt();
 			
 		} else {
 			System.exit(1);
@@ -120,5 +122,11 @@ public class GenericStartMenu implements ActionListener, Generic {
 	@Override
 	public void stopGUI() {
 		frame.dispose();
+	}
+	
+	//Start the GUI with the thread
+	@Override
+	public void run() {
+		this.startGUI();
 	}
 }

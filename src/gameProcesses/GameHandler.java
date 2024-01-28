@@ -2,6 +2,8 @@ package gameProcesses;
 
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import gameProcesses.game.GenericGame;
 import gameProcesses.game.PlotButton;
 import utils.SpatialGrid;
@@ -14,21 +16,25 @@ public class GameHandler {
 	private static SpatialGrid<PlotButton> plots;
 	private static ArrayList<Integer> mines = new ArrayList<Integer>();
 	private static int squareCounter = 0;
+	private static boolean gameOver = false;
 	
 	private static GenericGame game;
 	
 	public static void startGame() {
 		
 		GameHandler.setPlotsSqrt(15);
-		game = new GenericGame();
-		game.startGUI();
-		game.setStartingSquares();
+		SwingUtilities.invokeLater(game = new GenericGame());
 		
+	}
+	
+	public static boolean getGameState() {
+		return gameOver;
 	}
 	
 	public static void endGame() {
 		
-		game.endGame();
+		gameOver = true;
+		//game.endGame();
 		
 	}
 	
@@ -64,6 +70,8 @@ public class GameHandler {
 	//When a zero is clicked check if there are any other zeros around
 	public static void checkForZeros(int i) {
 		
+		
+		
 	}
 	
 	public static int getPlotsSqrt() {
@@ -86,10 +94,8 @@ public class GameHandler {
 		
 		if (plotsLength > 30) {
 			plotsLength = 30;
-			throw new IllegalArgumentException("plotsLength parameter above 30");
 		} else if (plotsLength < 4) {
 			plotsLength = 4;
-			throw new IllegalArgumentException("plotsLength parameter below 4");
 		}
 		
 		plotsSqrt = plotsLength;
@@ -99,7 +105,7 @@ public class GameHandler {
 		
 		squareCounter++;
 		
-		if (squareCounter == (plots.getSize() - mines.size())) {
+		if (squareCounter == (plots.getFillAmount() - mines.size())) {
 			System.out.println("Game Won");
 			endGame();
 		}
