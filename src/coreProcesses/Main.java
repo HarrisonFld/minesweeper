@@ -2,13 +2,15 @@ package coreProcesses;
 
 import javax.swing.SwingUtilities;
 
-import gameProcesses.GenericStartMenu;
+import gameProcesses.StartMenu;
+import gameProcesses.themes.DarkTheme;
+import gameProcesses.themes.ThemeHandler;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		SwingUtilities.invokeLater(new GenericStartMenu());
+		SwingUtilities.invokeLater(new StartMenu());
 		
 	}
 

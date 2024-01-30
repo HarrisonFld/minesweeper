@@ -7,23 +7,47 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import gameProcesses.GameHandler;
+import gameProcesses.themes.ThemeHandler;
+
 public class GameInfoPanel extends JPanel implements ActionListener {
-	
-	JButton exit = new JButton();
-	
+
+	private static final long serialVersionUID = 1L;
+
+	JButton exit;
+	JButton reset;
+
 	public GameInfoPanel() {
-		this.setPreferredSize(new Dimension(500, 500));
+		
+		exit = new JButton("exit");
+		reset = new JButton("reset");
+		
+		this.setPreferredSize(new Dimension(250, 500));
+		this.setBackground(ThemeHandler.getForeground());
+		
+		
 		exit.addActionListener(this);
+		exit.setPreferredSize(new Dimension(70, 50));
+		
+		reset.addActionListener(this);
+		reset.setPreferredSize(new Dimension(70, 50));
+		
 		this.add(exit);
+		this.add(reset);
+		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		if (e.getSource() instanceof JButton) {
-			System.out.println("hi");
-			System.exit(0);
+			
+			if (e.getSource() == exit) {
+				System.exit(0);
+			} else if (e.getSource() == reset) {
+				GameHandler.startGame();
+			}
 		}
 	}
-	
+
 }

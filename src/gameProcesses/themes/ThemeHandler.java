@@ -3,7 +3,7 @@ package gameProcesses.themes;
 import java.awt.Color;
 
 public class ThemeHandler {
-	
+
 	private static Theme theme = new DarkTheme();
 
 	public static Color getBackground() {
@@ -21,12 +21,12 @@ public class ThemeHandler {
 	public static Color getButton() {
 		return theme.BUTTON;
 	}
-	
+
 	public static void setThemeColor(Theme chosenTheme) {
-		
+
 		theme = chosenTheme;
-		
+
 	}
-	
-	
+
+
 }
