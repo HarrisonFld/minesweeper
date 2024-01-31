@@ -177,7 +177,7 @@ public class SpatialGrid<E> {
 	 * @param index		The index of the grid point.
 	 * @return Object[]
 	 */
-	public Object[] relativeSurroundings(int index) {
+	public Object[] getRelativeSurroundings(int index) {
 
 		Object[] elements = new Object[8];
 		Directions[] directions = Directions.values();

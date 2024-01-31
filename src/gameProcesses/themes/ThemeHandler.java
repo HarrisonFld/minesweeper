@@ -22,10 +22,12 @@ public class ThemeHandler {
 		return theme.BUTTON;
 	}
 
-	public static void setThemeColor(Theme chosenTheme) {
-
+	public static void setTheme(Theme chosenTheme) {
 		theme = chosenTheme;
-
+	}
+	
+	public static Theme getTheme() {
+		return theme;
 	}
 
 

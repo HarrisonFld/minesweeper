@@ -1,11 +1,17 @@
 package gameProcesses;
 
-public class Menu {
+import java.awt.Color;
+
+import javax.swing.JPanel;
+
+public class Menu extends JPanel {
 	
-	//Make it appear over the game somehow
-	
-	public void Menu() {
+	private static final long serialVersionUID = -8872473059626312879L;
+
+	public Menu() {
+		
+		this.setOpaque(false);
 		
 	}
-	
+
 }

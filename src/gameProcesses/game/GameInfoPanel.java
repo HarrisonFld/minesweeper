@@ -6,8 +6,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import gameProcesses.GameHandler;
+import gameProcesses.themes.DarkTheme;
+import gameProcesses.themes.LightTheme;
 import gameProcesses.themes.ThemeHandler;
 
 public class GameInfoPanel extends JPanel implements ActionListener {
@@ -16,15 +20,19 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 
 	JButton exit;
 	JButton reset;
+	JTextField plotsSqrtTextField;
+	JButton temp;
 
 	public GameInfoPanel() {
 		
+		temp = new JButton("CLICK ME TO CHANGE THE THEME");
+		
 		exit = new JButton("exit");
 		reset = new JButton("reset");
+		plotsSqrtTextField = new JTextField("15");
 		
 		this.setPreferredSize(new Dimension(250, 500));
 		this.setBackground(ThemeHandler.getForeground());
-		
 		
 		exit.addActionListener(this);
 		exit.setPreferredSize(new Dimension(70, 50));
@@ -32,8 +40,16 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 		reset.addActionListener(this);
 		reset.setPreferredSize(new Dimension(70, 50));
 		
+		plotsSqrtTextField.setPreferredSize(new Dimension(100, 25));
+		plotsSqrtTextField.setHorizontalAlignment(SwingUtilities.HORIZONTAL);
+		
+		temp.addActionListener(this);
+		temp.setFocusable(false);
+		
 		this.add(exit);
 		this.add(reset);
+		this.add(plotsSqrtTextField);
+		this.add(temp);
 		
 	}
 
@@ -42,11 +58,35 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 
 		if (e.getSource() instanceof JButton) {
 			
-			if (e.getSource() == exit) {
+			JButton button = (JButton) e.getSource();
+			
+			if (button == exit) {
 				System.exit(0);
-			} else if (e.getSource() == reset) {
-				GameHandler.startGame();
+			} else if (button == reset) {
+				
+				int userPlotsSqrt;
+				
+				try {
+					userPlotsSqrt = Integer.parseInt(plotsSqrtTextField.getText());
+				} catch (NumberFormatException e2) {
+					userPlotsSqrt = 15;
+					plotsSqrtTextField.setText(String.valueOf(15));
+				}
+				
+				GameHandler.startGame(userPlotsSqrt);
+				
+			} else if (button == temp) {
+				
+				//TEMP
+				if (ThemeHandler.getTheme().getClass() == DarkTheme.class) {
+					GameHandler.changeTheme(new LightTheme());
+				} else {
+					GameHandler.changeTheme(new DarkTheme());
+				}
+				
 			}
+			
+			
 		}
 	}
 

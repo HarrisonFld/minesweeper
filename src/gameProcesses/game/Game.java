@@ -14,20 +14,23 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 
-import gameProcesses.GameHandler;
 import gameProcesses.GUIRunnableInterface;
+import gameProcesses.GameHandler;
+import gameProcesses.Menu;
 import gameProcesses.themes.ThemeHandler;
 import utils.SpatialGrid;
 import utils.SpatialGrid.Directions;
 
-public class Game implements GUIRunnableInterface, Runnable {
+public class Game implements GUIRunnableInterface {
 
-	JFrame frame;
-	JPanel focusAreaContainer;
-	JPanel playAreaContainer;
-	GridLayout grid;
-	JPanel GameInfoPanel;
+	private JFrame frame;
+	private JPanel focusAreaContainer; //Contains All Game Elements
+	private JPanel playAreaContainer; //Contains All Gameplay Elements
+	private GameInfoPanel gameInfoPanel; //Game Utilities
+	private Menu menu; //The Game Menu
 	
+	private GridLayout grid;
+
 	private int plotsSqrt;
 	private int seed;
 	private SpatialGrid<PlotButton> plots;
@@ -39,14 +42,14 @@ public class Game implements GUIRunnableInterface, Runnable {
 
 		setPlotsSqrt(plotsSqrt);
 		
-		grid = new GridLayout(this.plotsSqrt, this.plotsSqrt, 4, 4);
+		int borderWidth = Math.round(this.plotsSqrt / 5);
+		
+		grid = new GridLayout(this.plotsSqrt, this.plotsSqrt, borderWidth, borderWidth);
 		
 		startGUI();
 
 	}
 	
-	
-
 	@Override
 	public void startGUI() {
 
@@ -54,14 +57,15 @@ public class Game implements GUIRunnableInterface, Runnable {
 		frame.setUndecorated(true);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setLayout(new BorderLayout());
-		frame.setBackground(ThemeHandler.getBackground());
 		frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+		frame.setLayout(new BorderLayout());
 
 		//Add To Frame
 		addPanels();
 		addPlotButtons();
-
+		
+		updateColors();
+		
 	}
 	
 	@Override
@@ -69,14 +73,14 @@ public class Game implements GUIRunnableInterface, Runnable {
 		frame.dispose();
 	}
 	
-	public void restartGame() {
+	public void restartGame(int plotsSqrt) {
 		
 		seed = 0;
 		plots = null;
 		mines.clear();
 		dugSquaresCounter = 0;
+		setPlotsSqrt(plotsSqrt);
 		gameOver = false;
-		plotsSqrt =  4;
 		
 		resetPlayAreaContainers();
 		
@@ -86,8 +90,8 @@ public class Game implements GUIRunnableInterface, Runnable {
 		
 		playAreaContainer.removeAll();
 		
-		grid = new GridLayout(plotsSqrt, plotsSqrt, 4, 4);
-		playAreaContainer.setLayout(grid);
+		grid.setColumns(plotsSqrt);
+		grid.setRows(plotsSqrt);
 		
 		addPlotButtons();
 		
@@ -96,39 +100,44 @@ public class Game implements GUIRunnableInterface, Runnable {
 	}
 
 	private void addPanels() {
-
-		focusAreaContainer = new JPanel();
-		focusAreaContainer.setBackground(ThemeHandler.getBackground());
-
+		
+		menu = new Menu();
+		
 		SpringLayout layout = new SpringLayout();
 
+		focusAreaContainer = new JPanel();
+		focusAreaContainer.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+		focusAreaContainer.setPreferredSize(focusAreaContainer.getMaximumSize());
 		focusAreaContainer.setLayout(layout);
 		focusAreaContainer.setOpaque(true);
-
+		
 		playAreaContainer = new JPanel();
-		playAreaContainer.setBackground(Color.black);
 		playAreaContainer.setPreferredSize(new Dimension(700, 700));
 		playAreaContainer.setFocusable(true);
 		playAreaContainer.setLayout(grid);
 		playAreaContainer.setOpaque(true);
 
-		GameInfoPanel = new GameInfoPanel();
+		gameInfoPanel = new GameInfoPanel();
 
 		//Move both to vertical center
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, playAreaContainer, 0, SpringLayout.VERTICAL_CENTER, focusAreaContainer);
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, GameInfoPanel, 0, SpringLayout.VERTICAL_CENTER, focusAreaContainer);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, gameInfoPanel, 0, SpringLayout.VERTICAL_CENTER, focusAreaContainer);
 
 		//Position playAreaContainer to the horizontal center
 		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, playAreaContainer, 0, SpringLayout.HORIZONTAL_CENTER, focusAreaContainer);
 
 		//Position GameInfoPanel to the right of playAreaContainer
-		layout.putConstraint(SpringLayout.WEST, GameInfoPanel, 75, SpringLayout.EAST, playAreaContainer);
-
+		layout.putConstraint(SpringLayout.WEST, gameInfoPanel, 75, SpringLayout.EAST, playAreaContainer);
+		
+		//Position the Menu to the center of focusAreaContainer.
+		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menu, 0, SpringLayout.HORIZONTAL_CENTER, focusAreaContainer);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, menu, 0, SpringLayout.VERTICAL_CENTER, focusAreaContainer);
+		
 		focusAreaContainer.add(playAreaContainer);
-		focusAreaContainer.add(GameInfoPanel);
-
+		focusAreaContainer.add(gameInfoPanel);
+		
 		//Add To Parent
-		frame.add(focusAreaContainer, BorderLayout.CENTER);
+		frame.add(focusAreaContainer);
 		
 	}
 	
@@ -140,7 +149,7 @@ public class Game implements GUIRunnableInterface, Runnable {
 
 		for (int i = 0; i < plots.getArea(); i++) {
 
-			PlotButton plot = new PlotButton(GameHandler.getRandomBoolean(), i);
+			PlotButton plot = new PlotButton(GameHandler.getRandomBoolean(plotsSqrt), i);
 
 			plots.add(plot);
 			playAreaContainer.add(plots.get(i));
@@ -237,7 +246,7 @@ public class Game implements GUIRunnableInterface, Runnable {
 
 		int mines = 0;
 
-		for (Object plot : plots.relativeSurroundings(i)) {
+		for (Object plot : plots.getRelativeSurroundings(i)) {
 			if (plot != null && ((PlotButton) plot).isMine()) {
 				mines++;
 			}
@@ -247,9 +256,29 @@ public class Game implements GUIRunnableInterface, Runnable {
 
 	}
 	 
+	static int x = 0;
+	
 	//When a zero is clicked check if there are any other zeros around
-	private void checkForZeros(int i) {
-
+	public void checkForZeros(int i) {
+		
+		//PlotButton plot;
+		
+		//Get all plots around it
+		//	If plot in null or plot isn't enabled continue
+		//call the plot's left clicked.
+		
+		
+		for (Object plot : plots.getRelativeSurroundings(i)) {
+				
+			if (plot == null || ((Component) plot).isEnabled() == false) {
+				continue;
+			}
+			
+			((Component) plot).setBackground(Color.blue);
+			
+			((PlotButton) plot).onLeftClicked();
+			
+		}
 
 
 	}
@@ -259,10 +288,8 @@ public class Game implements GUIRunnableInterface, Runnable {
 	}
 	
 	public SpatialGrid<PlotButton> getPlots() {
-
 		return plots;
-
-	}
+}
 	
 	private void setPlotsSqrt(int plotsLength) {
 
@@ -275,7 +302,7 @@ public class Game implements GUIRunnableInterface, Runnable {
 		plotsSqrt = plotsLength;
 	}
 	
-	public void updateCounter() {
+	public void checkWin() {
 		
 		dugSquaresCounter++;
 		
@@ -283,6 +310,21 @@ public class Game implements GUIRunnableInterface, Runnable {
 			System.out.println("Game Won");
 			endGame();
 		}
+		
+	}
+	
+	public void updateGraphics() {
+		updateColors();
+		frame.repaint();
+	}
+	
+	private void updateColors() {
+		
+		focusAreaContainer.setBackground(ThemeHandler.getBackground());
+		frame.setBackground(ThemeHandler.getBackground());
+		playAreaContainer.setBackground(Color.black);
+		menu.setBackground(ThemeHandler.getForeground());
+		gameInfoPanel.setBackground(ThemeHandler.getForeground());
 		
 	}
 	

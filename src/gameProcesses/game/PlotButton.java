@@ -83,6 +83,7 @@ public class PlotButton extends JButton implements MouseListener {
 		}
 
 		this.setIcon(null);
+		this.setEnabled(false); //This has to be before the checkForZeros Method!
 
 		if (mine) {
 
@@ -97,6 +98,7 @@ public class PlotButton extends JButton implements MouseListener {
 
 			if (mines == 0) {
 				this.setForeground(Color.green);
+				GameHandler.checkForZeros(index);
 			} else if (mines == 1) {
 				this.setForeground(Color.yellow);
 			} else if (mines > 1 && mines < 4) {
@@ -106,11 +108,10 @@ public class PlotButton extends JButton implements MouseListener {
 			}
 
 			this.setText(String.valueOf(mines));
-			this.setEnabled(false);
 			this.removeMouseListener(this);
 			
 			GameHandler.updateCounter();
-
+			
 		}
 
 	}

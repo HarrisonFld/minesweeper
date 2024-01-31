@@ -2,6 +2,8 @@ package gameProcesses;
 
 import gameProcesses.game.Game;
 import gameProcesses.game.PlotButton;
+import gameProcesses.themes.Theme;
+import gameProcesses.themes.ThemeHandler;
 import utils.SpatialGrid;
 
 public class GameHandler {
@@ -9,13 +11,13 @@ public class GameHandler {
 	//Defines the individual length of row and column
 	private static Game game;
 
-	public static void startGame() {
+	public static void startGame(int plotsSqrt) {
 		
 		//Necessary to make sure multiple game instances don't appear
 		if (game != null) {
-			game.restartGame();
+			game.restartGame(plotsSqrt);
 		} else {
-			game = new Game(15);
+			game = new Game(plotsSqrt);
 		}
 		
 		game.setStartingSquares();
@@ -33,7 +35,7 @@ public class GameHandler {
 	 *
 	 * Make there is less mines than there are non-mines
 	 */
-	public static boolean getRandomBoolean() {
+	public static boolean getRandomBoolean(int plotsSqrt) {
 
 		if (Math.random() > 0.7) {
 			return true;
@@ -41,6 +43,11 @@ public class GameHandler {
 			return false;
 		}
 
+	}
+	
+	public static void changeTheme(Theme theme) {
+		ThemeHandler.setTheme(theme);
+		game.updateGraphics();
 	}
 	
 	//Bunch of encapsulations that might want to be looked over and changed.
@@ -58,7 +65,11 @@ public class GameHandler {
 	}
 	
 	public static void updateCounter() {
-		game.updateCounter();
+		game.checkWin();
+	}
+	
+	public static void checkForZeros(int i) {
+		game.checkForZeros(i);
 	}
 
 }
