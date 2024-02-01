@@ -10,8 +10,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import gameProcesses.GameHandler;
-import gameProcesses.themes.DarkTheme;
-import gameProcesses.themes.LightTheme;
 import gameProcesses.themes.ThemeHandler;
 
 public class GameInfoPanel extends JPanel implements ActionListener {
@@ -25,7 +23,7 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 
 	public GameInfoPanel() {
 		
-		temp = new JButton("CLICK ME TO CHANGE THE THEME");
+		temp = new JButton("Open Settings");
 		
 		exit = new JButton("exit");
 		reset = new JButton("reset");
@@ -77,12 +75,7 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 				
 			} else if (button == temp) {
 				
-				//TEMP
-				if (ThemeHandler.getTheme().getClass() == DarkTheme.class) {
-					GameHandler.changeTheme(new LightTheme());
-				} else {
-					GameHandler.changeTheme(new DarkTheme());
-				}
+				GameHandler.openMenu();
 				
 			}
 			

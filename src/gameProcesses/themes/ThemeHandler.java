@@ -5,7 +5,7 @@ import java.awt.Color;
 public class ThemeHandler {
 
 	private static Theme theme = new DarkTheme();
-
+	
 	public static Color getBackground() {
 		return theme.BACKGROUND;
 	}
@@ -29,6 +29,5 @@ public class ThemeHandler {
 	public static Theme getTheme() {
 		return theme;
 	}
-
-
+	
 }

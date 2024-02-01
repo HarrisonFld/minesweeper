@@ -9,7 +9,10 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
@@ -24,7 +27,7 @@ import utils.SpatialGrid.Directions;
 public class Game implements GUIRunnableInterface {
 
 	private JFrame frame;
-	private JPanel focusAreaContainer; //Contains All Game Elements
+	private JLayeredPane focusAreaContainer; //Contains All Game Elements
 	private JPanel playAreaContainer; //Contains All Gameplay Elements
 	private GameInfoPanel gameInfoPanel; //Game Utilities
 	private Menu menu; //The Game Menu
@@ -43,7 +46,6 @@ public class Game implements GUIRunnableInterface {
 		setPlotsSqrt(plotsSqrt);
 		
 		int borderWidth = Math.round(this.plotsSqrt / 5);
-		
 		grid = new GridLayout(this.plotsSqrt, this.plotsSqrt, borderWidth, borderWidth);
 		
 		startGUI();
@@ -52,12 +54,17 @@ public class Game implements GUIRunnableInterface {
 	
 	@Override
 	public void startGUI() {
-
+		
+		//Insantiate all members of the GUI
 		frame = new JFrame();
+		focusAreaContainer = new JLayeredPane();
+		menu = new Menu();
+		gameInfoPanel = new GameInfoPanel();
+		playAreaContainer = new JPanel();
+		
 		frame.setUndecorated(true);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		frame.setLayout(new BorderLayout());
 
 		//Add To Frame
@@ -101,23 +108,17 @@ public class Game implements GUIRunnableInterface {
 
 	private void addPanels() {
 		
-		menu = new Menu();
-		
 		SpringLayout layout = new SpringLayout();
 
-		focusAreaContainer = new JPanel();
 		focusAreaContainer.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		focusAreaContainer.setPreferredSize(focusAreaContainer.getMaximumSize());
 		focusAreaContainer.setLayout(layout);
 		focusAreaContainer.setOpaque(true);
 		
-		playAreaContainer = new JPanel();
 		playAreaContainer.setPreferredSize(new Dimension(700, 700));
 		playAreaContainer.setFocusable(true);
 		playAreaContainer.setLayout(grid);
 		playAreaContainer.setOpaque(true);
-
-		gameInfoPanel = new GameInfoPanel();
 
 		//Move both to vertical center
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, playAreaContainer, 0, SpringLayout.VERTICAL_CENTER, focusAreaContainer);
@@ -133,8 +134,9 @@ public class Game implements GUIRunnableInterface {
 		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menu, 0, SpringLayout.HORIZONTAL_CENTER, focusAreaContainer);
 		layout.putConstraint(SpringLayout.VERTICAL_CENTER, menu, 0, SpringLayout.VERTICAL_CENTER, focusAreaContainer);
 		
-		focusAreaContainer.add(playAreaContainer);
-		focusAreaContainer.add(gameInfoPanel);
+		focusAreaContainer.add(playAreaContainer, JLayeredPane.DEFAULT_LAYER);
+		focusAreaContainer.add(gameInfoPanel, JLayeredPane.DRAG_LAYER);
+		focusAreaContainer.add(menu, JLayeredPane.MODAL_LAYER);
 		
 		//Add To Parent
 		frame.add(focusAreaContainer);
@@ -164,13 +166,8 @@ public class Game implements GUIRunnableInterface {
 	
 	//TEMP
 	public void endGame() {
-
 		gameOver = true;
-		
-//		for (Component plot : playAreaContainer.getComponents()) {
-//			((PlotButton) plot).setEnabled(false);
-//		}
-//		
+		JOptionPane.showMessageDialog(focusAreaContainer, "Game Over");
 	}
 
 	/*
@@ -307,7 +304,7 @@ public class Game implements GUIRunnableInterface {
 		dugSquaresCounter++;
 		
 		if (dugSquaresCounter == (plots.getArea() - mines.size())) {
-			System.out.println("Game Won");
+			JOptionPane.showMessageDialog(frame, "Game Won");
 			endGame();
 		}
 		
@@ -323,9 +320,13 @@ public class Game implements GUIRunnableInterface {
 		focusAreaContainer.setBackground(ThemeHandler.getBackground());
 		frame.setBackground(ThemeHandler.getBackground());
 		playAreaContainer.setBackground(Color.black);
-		menu.setBackground(ThemeHandler.getForeground());
+		menu.setBackground(ThemeHandler.getBackground());
 		gameInfoPanel.setBackground(ThemeHandler.getForeground());
 		
+	}
+	
+	public void toggleMenuVisible() {
+		menu.setVisible(!menu.isVisible());
 	}
 	
 }

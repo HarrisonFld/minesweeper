@@ -111,6 +111,7 @@ public class StartMenu implements ActionListener, GUIRunnableInterface, Runnable
 		if (e.getSource() == start) {
 
 			GameHandler.startGame(15);
+			
 			stopGUI();
 
 		} else {

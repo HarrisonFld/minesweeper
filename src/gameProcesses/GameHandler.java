@@ -71,5 +71,9 @@ public class GameHandler {
 	public static void checkForZeros(int i) {
 		game.checkForZeros(i);
 	}
+	
+	public static void openMenu() {
+		game.toggleMenuVisible();
+	}
 
 }
