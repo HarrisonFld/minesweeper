@@ -26,8 +26,8 @@ public class GameHandler {
 	}
 	
 	//TEMP
-	public static void endGame() {
-		game.endGame();
+	public static void endGame(boolean gameWon) {
+		game.endGame(gameWon);
 	}
 
 	/*

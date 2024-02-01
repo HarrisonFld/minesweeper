@@ -9,7 +9,6 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
@@ -35,7 +34,7 @@ public class Game implements GUIRunnableInterface {
 	private GridLayout grid;
 
 	private int plotsSqrt;
-	private int seed;
+	// int seed;
 	private SpatialGrid<PlotButton> plots;
 	private ArrayList<Integer> mines = new ArrayList<>(); //Where the mines are located
 	private int dugSquaresCounter = 0; //How many non-mine squares have ben clicked
@@ -82,7 +81,6 @@ public class Game implements GUIRunnableInterface {
 	
 	public void restartGame(int plotsSqrt) {
 		
-		seed = 0;
 		plots = null;
 		mines.clear();
 		dugSquaresCounter = 0;
@@ -165,9 +163,15 @@ public class Game implements GUIRunnableInterface {
 	}
 	
 	//TEMP
-	public void endGame() {
+	public void endGame(boolean gameWon) {
 		gameOver = true;
-		JOptionPane.showMessageDialog(focusAreaContainer, "Game Over");
+		
+		if (gameWon) {
+			JOptionPane.showMessageDialog(frame, "Game Won");
+		} else {
+			JOptionPane.showMessageDialog(frame, "Game Over");
+		}
+		
 	}
 
 	/*
@@ -304,8 +308,7 @@ public class Game implements GUIRunnableInterface {
 		dugSquaresCounter++;
 		
 		if (dugSquaresCounter == (plots.getArea() - mines.size())) {
-			JOptionPane.showMessageDialog(frame, "Game Won");
-			endGame();
+			endGame(true);
 		}
 		
 	}

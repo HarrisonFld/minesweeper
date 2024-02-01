@@ -35,8 +35,9 @@ public class PlotButton extends JButton implements MouseListener {
 	private boolean mine = false;
 	private int index;
 	private boolean flagged = false;
-
-	private static ImageIcon icon = new ImageIcon(FileManager.findFile("/imgs/flag.png"));
+	
+	private ImageIcon mineIcon = new ImageIcon(FileManager.findFile("/imgs/mine.png"));
+	private static ImageIcon flagIcon = new ImageIcon(FileManager.findFile("/imgs/flag.png"));
 
 	/**
 	 * @see PlotButton
@@ -53,10 +54,13 @@ public class PlotButton extends JButton implements MouseListener {
 		this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		this.setFocusable(true);
 		this.setFocusPainted(false);
-		this.setDisabledIcon(icon);
 		this.setFont(new Font("Copperplate", Font.BOLD, 25));
 		mouseListener();
-
+		
+		if (this.mine) {
+			this.setDisabledIcon(mineIcon);
+		} 
+		
 		this.setBackground(Color.green);
 
 	}
@@ -82,17 +86,16 @@ public class PlotButton extends JButton implements MouseListener {
 			return;
 		}
 
+		this.setBackground(Color.darkGray);
 		this.setIcon(null);
 		this.setEnabled(false); //This has to be before the checkForZeros Method!
 
 		if (mine) {
-
-			this.setBackground(Color.red);
-			GameHandler.endGame();
+			
+			this.setIcon(mineIcon);
+			GameHandler.endGame(false);
 
 		} else {
-
-			this.setBackground(Color.darkGray);
 
 			int mines = GameHandler.getSurroundingMines(index);
 
@@ -125,7 +128,7 @@ public class PlotButton extends JButton implements MouseListener {
 		flagged = !flagged;
 		
 		if (flagged) {
-			plot.setIcon(icon);
+			plot.setIcon(flagIcon);
 		} else {
 			plot.setIcon(null);
 		}

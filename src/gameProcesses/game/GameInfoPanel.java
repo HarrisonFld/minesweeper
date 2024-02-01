@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -11,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import gameProcesses.GameHandler;
 import gameProcesses.themes.ThemeHandler;
+import utils.FileManager;
 
 public class GameInfoPanel extends JPanel implements ActionListener {
 
@@ -20,6 +22,9 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 	JButton reset;
 	JTextField plotsSqrtTextField;
 	JButton temp;
+	
+	ImageIcon alive = new ImageIcon(FileManager.findFile("/imgs/alive.png"));
+	ImageIcon dead = new ImageIcon(FileManager.findFile("/imgs/dead.png"));;
 
 	public GameInfoPanel() {
 		
@@ -27,6 +32,7 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 		
 		exit = new JButton("exit");
 		reset = new JButton("reset");
+		
 		plotsSqrtTextField = new JTextField("15");
 		
 		this.setPreferredSize(new Dimension(250, 500));
