@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -25,6 +26,10 @@ import utils.SpatialGrid.Directions;
 
 public class Game implements GUIRunnableInterface {
 
+	public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	public static double width = screenSize.getWidth();
+	public static double height = screenSize.getHeight();
+	
 	private JFrame frame;
 	private JLayeredPane focusAreaContainer; //Contains All Game Elements
 	private JPanel playAreaContainer; //Contains All Gameplay Elements
@@ -113,7 +118,7 @@ public class Game implements GUIRunnableInterface {
 		focusAreaContainer.setLayout(layout);
 		focusAreaContainer.setOpaque(true);
 		
-		playAreaContainer.setPreferredSize(new Dimension(700, 700));
+		playAreaContainer.setPreferredSize(new Dimension((int)(width / 2), (int) (width / 2)));
 		playAreaContainer.setFocusable(true);
 		playAreaContainer.setLayout(grid);
 		playAreaContainer.setOpaque(true);
@@ -126,7 +131,7 @@ public class Game implements GUIRunnableInterface {
 		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, playAreaContainer, 0, SpringLayout.HORIZONTAL_CENTER, focusAreaContainer);
 
 		//Position GameInfoPanel to the right of playAreaContainer
-		layout.putConstraint(SpringLayout.WEST, gameInfoPanel, 75, SpringLayout.EAST, playAreaContainer);
+		layout.putConstraint(SpringLayout.WEST, gameInfoPanel, (int)(width / 24), SpringLayout.EAST, playAreaContainer);
 		
 		//Position the Menu to the center of focusAreaContainer.
 		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menu, 0, SpringLayout.HORIZONTAL_CENTER, focusAreaContainer);
@@ -329,6 +334,7 @@ public class Game implements GUIRunnableInterface {
 	}
 	
 	public void toggleMenuVisible() {
+		playAreaContainer.setEnabled(!playAreaContainer.isEnabled());
 		menu.setVisible(!menu.isVisible());
 	}
 	

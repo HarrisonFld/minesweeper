@@ -35,7 +35,7 @@ public class GameInfoPanel extends JPanel implements ActionListener {
 		
 		plotsSqrtTextField = new JTextField("15");
 		
-		this.setPreferredSize(new Dimension(250, 500));
+		this.setPreferredSize(new Dimension((int)Game.width / 7, (int) (Game.height / 1.5)));
 		this.setBackground(ThemeHandler.getForeground());
 		
 		exit.addActionListener(this);
