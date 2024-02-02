@@ -50,10 +50,8 @@ public class PlotButton extends JButton implements MouseListener {
 		this.mine = mine;
 		this.index = index;
 
-		//this.setContentAreaFilled(false);
 		this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		this.setFocusable(true);
-		this.setFocusPainted(false);
+		this.setFocusable(false);
 		this.setFont(new Font("Copperplate", Font.BOLD, 25));
 		mouseListener();
 		
