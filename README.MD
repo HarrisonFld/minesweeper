@@ -5,7 +5,7 @@ MIT License - 2024.
 ## Running From JAR
 Have Java JDK and JVM installed.
 Open terminal and navigate to folder with JAR.
-Run: "javac -jar minesweeper.jar".
+Run: "java -jar minesweeper.jar".
 
 ## Building From Source
 Have Java installed (Java 17+).
